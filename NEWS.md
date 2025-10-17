@@ -8,7 +8,7 @@
 
 # Changes in version 2025.10.8 (PR#221)
 
-- Multi-line text support: `\n` now works in plot titles, axis titles, legend titles, and `geom_text()` labels, not just tooltips. Created `R/z_multiline.R` with helper functions to convert `\n` to `<br/>` during R compilation (previously only done in JavaScript for tooltips). The JavaScript renderer converts `<br/>` to SVG `<tspan>` elements for proper multi-line display.
+- `ggtitle()`, `xlab()`, `ylab()`, `scale_*_discrete(name=...)`, and `geom_text()` now support multi-line text using `\n` newline characters. Previously only tooltips supported this feature.
 
 # Changes in version 2025.10.3 (PR#240)
 
