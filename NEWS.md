@@ -1,6 +1,14 @@
-# Changes in version 2026.4.17 (PR#286)
+# Changes in version 2026.5.29 (PR#286)
 
 - Added regression tests for `panel.margin` with positive values (issue #180), covering vertical/horizontal `facet_grid` and `facet_wrap`.
+
+# Changes in version 2026.4.28 (PR#292)
+
+- `geom(showSelected=character())` means to opt-out of interactive legends. Thanks @ANAMASGARD.
+
+# Changes in version 2026.3.8 (PR#311)
+
+- `geom_dotplot()` has been removed. Use `geom_point()` instead for interactive visualizations. (Fixed #289)
 
 # Changes in version 2025.12.4 (PR#277)
 
@@ -17,6 +25,10 @@
 # Changes in version 2025.11.17 (PR#274)
 
 - `update_axes`: Fixed issue #273 where axis tick text font-size was inconsistent between plots with and without `update_axes`. Previously, plots using `theme_animint(update_axes="x")` would lose `theme(axis.text = element_text(size=...))` styling after axis updates.
+
+# Changes in version 2025.12.4 (PR#272)
+
+- Download status table now shows `files`, `disk`, and `rows` columns in "downloaded / total" format. Row counts display with comma separators for readability. Disk sizes show KiB or MiB units (using binary 1024 divisor, consistent with `man du`). Chunk sizes are calculated in R using `file.size()` and exported via plot.json.
 
 # Changes in version 2025.10.31 (PR#271)
 

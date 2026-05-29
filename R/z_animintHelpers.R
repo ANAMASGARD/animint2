@@ -6,6 +6,10 @@
 #' @param L layer of the plot
 #' @return L : Layer with additional mapping to new aesthetic
 addShowSelectedForLegend <- function(meta, legend, L){
+  ## Check if user explicitly disabled showSelected with character()
+  ## If showSelected is character(0), user wants to opt out of auto-showSelected
+  user_disabled_showSelected <- is.character(L$extra_params$showSelected) &&
+    length(L$extra_params$showSelected) == 0
   for(legend.i in seq_along(legend)) {
     one.legend <- legend[[legend.i]]
     ## the name of the selection variable used in this legend.
@@ -30,7 +34,7 @@ addShowSelectedForLegend <- function(meta, legend, L){
         ## only add showSelected aesthetic if the variable is
         ## used by the geom
         type.vec <- one.legend$legend_type
-        if(any(type.vec %in% names(L$mapping))){
+        if((!user_disabled_showSelected) && any(type.vec %in% names(L$mapping))){
           L$extra_params$showSelected <- c(L$extra_params$showSelected, s.name)
         }
       }
@@ -58,7 +62,7 @@ addShowSelectedForLegend <- function(meta, legend, L){
       meta$selectors[[s.name]]$legend <- TRUE
     }#length(s.name)
   }#legend.i
-  return(L)
+  L
 }
 
 
@@ -933,9 +937,21 @@ saveChunks <- function(x, meta){
     # fwrite defaults ensure fields are quoted so that embedded
     # newlines or tabs in string fields do not break the TSV format
     # when read by d3.tsv.
+    csv.path <- file.path(meta$out.dir, csv.name)
     data.table::fwrite(
-      na.omit(x), file.path(meta$out.dir, csv.name),
+      na.omit(x), csv.path,
       row.names=FALSE, sep="\t")
+    # Calculate chunk size and row count
+    chunk_bytes <- file.size(csv.path)
+    chunk_rows <- nrow(na.omit(x))
+    # Store chunk info
+    if(!exists("chunk_info", envir=meta)) {
+      meta$chunk_info <- list()
+    }
+    meta$chunk_info[[csv.name]] <- list(
+      bytes = chunk_bytes,
+      rows = chunk_rows
+    )
     meta$chunk.i <- meta$chunk.i + 1L
     this.i
   }else if(is.list(x)){
